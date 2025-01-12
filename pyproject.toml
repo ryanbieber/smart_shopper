@@ -1,0 +1,29 @@
+[project]
+authors = [
+    {name = "John Doe", email = "johndoe@example.com"},
+]
+requires-python = "<4.0,>=3.12"
+dependencies = [
+    "ipykernel<7.0.0,>=6.29.5",
+    "bs4<1.0.0,>=0.0.2",
+    "selenium<5.0.0,>=4.27.1",
+    "structlog<25.0.0,>=24.4.0",
+    "httpx<1.0.0,>=0.28.1",
+    "pydantic<3.0.0,>=2.10.4",
+    "langchain<1.0.0,>=0.3.14",
+    "langchain-openai<1.0.0,>=0.2.14",
+    "pydantic-settings<3.0.0,>=2.7.1",
+    "sendgrid<7.0.0,>=6.11.0",
+]
+name = "smart-shopper"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+
+[dependency-groups]
+dev = [
+    "smart-shopper",
+]
+
+[tool.uv.sources]
+smart-shopper = { workspace = true }
