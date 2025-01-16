@@ -7,9 +7,11 @@ ENV VIRTUAL_ENV=/opt/venv \
 
 ADD https://astral.sh/uv/install.sh /install.sh
 RUN chmod -R 655 /install.sh && /install.sh && rm /install.sh
-COPY ./requirements.txt .
-RUN /root/.local/bin/uv venv /opt/venv && \
-/root/.local/bin/uv pip install --no-cache -r requirements.txt
+
+## uv lock and sync
+COPY uv.lock uv.lock
+RUN uv sync
+
 
 # App image
 FROM python:3.12-slim-bookworm

@@ -33,6 +33,11 @@ class CostcoCategories(str, Enum):
 
 class Store(str, Enum):
     COSTCO = "costco"
+    TARGET = "target"
+    WALMART = "walmart"
+    AMAZON = "amazon"
+    HYVEE = "hyvee"
+    ALDI = "aldi"
 
 class Product(BaseModel):
     store: Store = Field(description="The store the product is from")
