@@ -1,14 +1,14 @@
-"""Main pipeline for the Smart Shopper project."""
-
-
-import structlog
-from smart_shopper.costco.pipeline import CostcoPipeline
-
-logger = structlog.get_logger()
+import streamlit as st
 
 def main():
-    """Main entry point of the application."""
-    logger.info("Starting the Smart Shopper")
-    costco_pipeline = CostcoPipeline()
-    costco_products = costco_pipeline.get_all_products()
-    logger.info("Finished the Smart Shopper")
+    st.title("Smart Shopper")
+
+    with st.form(key='email_form'):
+        email = st.text_input("Enter your email:")
+        submit_button = st.form_submit_button(label='Submit')
+
+    if submit_button:
+        st.write(f"Email submitted: {email}")
+
+if __name__ == "__main__":
+    main()

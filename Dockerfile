@@ -1,25 +1,33 @@
-# Base image
-FROM python:3.12 as build
+FROM python:3.12.0-slim
 
-RUN apt-get update && apt-get install -y build-essential curl
-ENV VIRTUAL_ENV=/opt/venv \
-    PATH="/opt/venv/bin:$PATH"
+ENV USER=uv-example-user \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    UV_PROJECT_ENVIRONMENT=/usr/local
 
-ADD https://astral.sh/uv/install.sh /install.sh
-RUN chmod -R 655 /install.sh && /install.sh && rm /install.sh
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -m -s /bin/bash $USER
 
-## uv lock and sync
-COPY uv.lock uv.lock
-RUN uv sync
+COPY --from=ghcr.io/astral-sh/uv:0.5.5 /uv /uvx /bin/
 
+ENV APP_DIR=/home/$USER/src
+WORKDIR $APP_DIR
 
-# App image
-FROM python:3.12-slim-bookworm
-COPY --from=build /opt/venv /opt/venv
+RUN --mount=type=cache,target=/home/$USER/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project
 
-# Activate the virtualenv in the container
-# See here for more information:
-# https://pythonspeed.com/articles/multi-stage-docker-python/
-ENV PATH="/opt/venv/bin:$PATH"
+COPY . $APP_DIR
 
-ENTRYPOINT [ "" ]
+RUN --mount=type=cache,target=/home/$USER/.cache/uv \
+    uv sync --frozen
+
+ENV PYTHONPATH=$APP_DIR
+
+USER $USER
+
+ENTRYPOINT ["uv", "run", "main.py"]
