@@ -8,7 +8,7 @@ LOG_FILE = docker-compose.log
 
 # Start the Docker Compose services
 up:
-	$(DOCKER_COMPOSE) up -d
+	$(DOCKER_COMPOSE) up -d --force-recreate --remove-orphans --build
 
 # Stop the Docker Compose services
 down:
@@ -19,7 +19,7 @@ restart: down up
 
 # Tail the logs of the Docker Compose services
 logs:
-	$(DOCKER_COMPOSE) logs -f > $(LOG_FILE)
+	$(DOCKER_COMPOSE) logs -f 
 
 # Clean up old Docker images and containers
 clean:

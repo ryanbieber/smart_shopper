@@ -1,28 +1,5 @@
-version: '3.8'
-
 services:
-  web:
+  smart_shopper:
     build: .
-    container_name: dash_app
-    volumes:
-      - .:/app
-    working_dir: /app
     ports:
-      - "8050:8050"
-    depends_on:
-      - db
-
-  db:
-    image: postgres:latest
-    container_name: postgres_db
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+      - "8501:8501"

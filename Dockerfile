@@ -1,33 +1,13 @@
 FROM python:3.12.0-slim
 
-ENV USER=uv-example-user \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    UV_PROJECT_ENVIRONMENT=/usr/local
+# Install uv.
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN apt-get update && apt-get install --no-install-recommends -y \
-    curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && useradd -m -s /bin/bash $USER
+# Copy the application into the container.
+COPY . /app
 
-COPY --from=ghcr.io/astral-sh/uv:0.5.5 /uv /uvx /bin/
+# Install the application dependencies.
+WORKDIR /app
+RUN uv sync --frozen --no-cache
 
-ENV APP_DIR=/home/$USER/src
-WORKDIR $APP_DIR
-
-RUN --mount=type=cache,target=/home/$USER/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-project
-
-COPY . $APP_DIR
-
-RUN --mount=type=cache,target=/home/$USER/.cache/uv \
-    uv sync --frozen
-
-ENV PYTHONPATH=$APP_DIR
-
-USER $USER
-
-ENTRYPOINT ["uv", "run", "main.py"]
+ENTRYPOINT ["uv", "run", "streamlit", "run", "smart_shopper/main.py"]

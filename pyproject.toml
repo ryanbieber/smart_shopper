@@ -1,6 +1,6 @@
 [project]
 authors = [
-    {name = "John Doe", email = "johndoe@example.com"},
+    {name = "Ryan Bieber", email = "ryan.bieber@protonmail.com"},
 ]
 requires-python = "<4.0,>=3.12"
 dependencies = [
