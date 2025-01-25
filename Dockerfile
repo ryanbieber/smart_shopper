@@ -10,4 +10,6 @@ COPY . /app
 WORKDIR /app
 RUN uv sync --frozen --no-cache
 
-ENTRYPOINT ["uv", "run", "streamlit", "run", "smart_shopper/main.py"]
+EXPOSE 8501
+
+ENTRYPOINT ["uv", "streamlit", "run", "smart_shopper/main.py"]
